@@ -43,7 +43,11 @@
 
    + iOS增加两个参数Clear、Done。Clear为输入框后边的X按钮 Done为输入框上方的按钮。
 
-   + 自定义字体：拷贝TTF字体资源放到StreamingAssets  并替换default为字体的名称即可
+     ​	示例1：使用Next事件绑定下一个MobileInputField的SetFoucs(true)事件 以激活下一个InputField。 
+
+     ​	示例2：使用Done事件绑定自身MobileInputField的Hide()事件 。
+
+   + 自定义字体：拷贝TTF字体资源放到StreamingAssets  并替换default为字体的名称即可。
 
 ##### 安卓
 
@@ -75,7 +79,9 @@
     group.addView(layout, params);
     ```
 
-+ 步骤2.修改KeyboardListener.java见
++ 步骤2.修改KeyboardListener.java见[KeyboardListener](https://github.com/yoyohan1/Unity_MobileInput/blob/master/AndroidJar_MobileInput/mobileinput/src/main/java/ru/mopsicus/mobileinput/KeyboardListener.java)
+
++ 步骤3.修改MobileInput.java见[MobileInput](https://github.com/yoyohan1/Unity_MobileInput/blob/master/AndroidJar_MobileInput/mobileinput/src/main/java/ru/mopsicus/mobileinput/MobileInput.java)
 
 ##### iOS：
 
