@@ -41,11 +41,11 @@
 
    + Search、Return、Done事件。可以绑定Done事件为MobileInputField.Hide()
 
-   + iOS增加两个参数Clear、Done。Clear为输入框后边的X按钮 Done为输入框上方的按钮。
-
      ​	示例1：使用Next事件绑定下一个MobileInputField的SetFoucs(true)事件 以激活下一个InputField。 
 
      ​	示例2：使用Done事件绑定自身MobileInputField的Hide()事件 。
+
+   + iOS增加两个参数Clear、Done。Clear为输入框后边的X按钮 Done为输入框上方的按钮。
 
    + 自定义字体：拷贝TTF字体资源放到StreamingAssets  并替换default为字体的名称即可。
 
