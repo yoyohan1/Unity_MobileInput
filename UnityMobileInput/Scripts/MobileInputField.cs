@@ -186,6 +186,7 @@ namespace Mopsicus.Plugins {
         /// </summary>
         private void Awake () {
             if (Plugins.instance == null){
+                Debug.LogError("请注意，发布时必需挂载Plugins.cs并且放在第一个启动场景！");
                 GameObject plugins = new GameObject("Plugins");
                 plugins.AddComponent<Plugins>();
             }

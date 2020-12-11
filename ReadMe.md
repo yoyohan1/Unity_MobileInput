@@ -39,20 +39,6 @@
           //this.SetVisible (hasFocus);
       }
       ```
-    + ```c#
-      //改进：修改MobileInputField.cs和Plugins.cs 增加Plugins的判断自动生成Plugins 无需提前挂载Plugins脚本
-      //1.在MobileInputField.cs的Awake中加入
-      if (Plugins.instance == null){
-          GameObject plugins = new GameObject("Plugins");
-          plugins.AddComponent<Plugins>();
-      }
-      //2.在Plugins.cs的Awake中加入
-      if (instance != null){
-          DestroyImmediate(gameObject);
-          return;
-      }
-      instance = this;
-      ```
    + 修改MobileInput.cs见[MobileInput](https://github.com/yoyohan1/Unity_MobileInput/blob/master/UnityMobileInput/Scripts/MobileInput.cs)  增加onFocus事件 解决了点不同输入框时 输入框需要调整高度到UGUI可见位置
    
    + 修改MobileInputReceiver.cs见[MobileInput](https://github.com/yoyohan1/Unity_MobileInput/blob/master/UnityMobileInput/Scripts/MobileInput.cs) 增加UNITY_EDITOR模式显示模拟键盘
@@ -68,6 +54,8 @@
 
 1. 拷贝文件到对应目录
 
+2. 发布时必需挂载Plugins.cs并且放在第一个启动场景！因为Android端需要在第一个界面初始化时做一些方法调用。不然会造成无法使用插件。
+
 3. 在需要使用插件的InputField上添加MobileInputField.cs插件，并设置参数：
 
    + Search、Return、Done事件。可以绑定Done事件为MobileInputField.Hide()
@@ -79,7 +67,7 @@
    + iOS增加两个参数Clear、Done。Clear为输入框后边的X按钮 Done为输入框上方的按钮。
 
    + 自定义字体：拷贝TTF字体资源放到StreamingAssets  并替换default为字体的名称即可。
-   
+
 4. 在GameObject上挂载KeyHeightMono 实现根据键盘高度自动调节输入框在UGUI中的位置。
 
 ##### 安卓
