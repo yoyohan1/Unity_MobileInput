@@ -23,36 +23,36 @@
      ```
      
    + ```c#
-       //改进：在MobileInputField.cs上修改
-       //把原生输入框的背景的alpha设置为0 不然会有白底
-       _config.BackgroundColor = new Color(_inputObject.colors.normalColor.r, _inputObject.colors.normalColor.g, _inputObject.colors.normalColor.b, 0);
-       // _config.BackgroundColor =_inputObject.colors.normalColor;
-       ```
-       
+     //改进：在MobileInputField.cs上修改
+     //把原生输入框的背景的alpha设置为0 不然会有白底
+     _config.BackgroundColor = new Color(_inputObject.colors.normalColor.r, _inputObject.colors.normalColor.g, _inputObject.colors.normalColor.b, 0);
+     // _config.BackgroundColor =_inputObject.colors.normalColor;
+     ```
+     
     + ```c#
-       //修复bug：在MobileInputField.cs上修改 
-       //ios按home键之后再切回应用Input消失了
-       private void OnApplicationFocus (bool hasFocus) {
-           if (!_isMobileInputCreated || !this.Visible) {
-               return;
-           }
-           //this.SetVisible (hasFocus);
-       }
-       ```
+      //修复bug：在MobileInputField.cs上修改 
+      //ios按home键之后再切回应用Input消失了
+      private void OnApplicationFocus (bool hasFocus) {
+          if (!_isMobileInputCreated || !this.Visible) {
+              return;
+          }
+          //this.SetVisible (hasFocus);
+      }
+      ```
     + ```c#
-    	//改进：修改MobileInputField.cs和Plugins.cs 增加Plugins的判断自动生成Plugins 无需提前挂载Plugins脚本
-        //1.在MobileInputField.cs的Awake中加入
-        if (Plugins.instance == null){
-            GameObject plugins = new GameObject("Plugins");
-            plugins.AddComponent<Plugins>();
-       }
-       //2.在Plugins.cs的Awake中加入
-       if (instance != null){
-           DestroyImmediate(gameObject);
-           return;
-       }
-       instance = this;
-       ```
+      //改进：修改MobileInputField.cs和Plugins.cs 增加Plugins的判断自动生成Plugins 无需提前挂载Plugins脚本
+      //1.在MobileInputField.cs的Awake中加入
+      if (Plugins.instance == null){
+          GameObject plugins = new GameObject("Plugins");
+          plugins.AddComponent<Plugins>();
+      }
+      //2.在Plugins.cs的Awake中加入
+      if (instance != null){
+          DestroyImmediate(gameObject);
+          return;
+      }
+      instance = this;
+      ```
    + 修改MobileInput.cs见[MobileInput](https://github.com/yoyohan1/Unity_MobileInput/blob/master/UnityMobileInput/Scripts/MobileInput.cs)  增加onFocus事件 解决了点不同输入框时 输入框需要调整高度到UGUI可见位置
    
    + 修改MobileInputReceiver.cs见[MobileInput](https://github.com/yoyohan1/Unity_MobileInput/blob/master/UnityMobileInput/Scripts/MobileInput.cs) 增加UNITY_EDITOR模式显示模拟键盘
