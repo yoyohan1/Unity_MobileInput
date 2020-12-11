@@ -39,6 +39,7 @@
           //this.SetVisible (hasFocus);
       }
       ```
+      
    + 修改MobileInput.cs见[MobileInput](https://github.com/yoyohan1/Unity_MobileInput/blob/master/UnityMobileInput/Scripts/MobileInput.cs)  增加onFocus事件 解决了点不同输入框时 输入框需要调整高度到UGUI可见位置
    
    + 修改MobileInputReceiver.cs见[MobileInput](https://github.com/yoyohan1/Unity_MobileInput/blob/master/UnityMobileInput/Scripts/MobileInput.cs) 增加UNITY_EDITOR模式显示模拟键盘
@@ -46,6 +47,8 @@
    + 增加KeyHeightMono.cs见[KeyHeightMono](https://github.com/yoyohan1/Unity_MobileInput/blob/master/UnityMobileInput/Scripts/KeyHeightMono.cs) 以使用Android和iOS端根据键盘高度自动调节输入框在UGUI中的位置
    
    + 修改KeyboardListener.java见[KeyboardListener](https://github.com/yoyohan1/Unity_MobileInput/blob/master/AndroidJar_MobileInput/mobileinput/src/main/java/ru/mopsicus/mobileinput/KeyboardListener.java) 解决了安卓输入法切换时键盘高度变化
+   
+   + 修改MobileInput.mm见[MobileInput.mm](https://github.com/yoyohan1/Unity_MobileInput/blob/master/UnityMobileInput/Plugins/iOS/MobileInput.mm) 解决了iOS输入法切换时键盘高度变化
    
    + iOS的bug 横屏第一个场景中使用该插件的InputField会不出现原生UI 除非打开闪屏动画或者打开竖屏。（测试了一天时间才发现造成bug的原因）解决方法为 打开闪屏动画 把闪屏动画列表设为空。偶现横屏Home键再返回应用也会不出现输入框。
 ### 接入

@@ -254,6 +254,7 @@ NSString *plugin;
         inputId = idInput;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillChangeFrameNotification object:nil];
     }
     return self;
 }
@@ -639,20 +640,29 @@ BOOL multiline;
     [self onTextChange:theTextField.text];
 }
 
+
+CGFloat preHeight;
+
 - (void)keyboardWillShow:(NSNotification *)notification {
-    if (![editView isFirstResponder]) {
-        return;
-    }
+//    if (![editView isFirstResponder]) {
+//        return;
+//    }
     NSDictionary *keyboardInfo = [notification userInfo];
     NSValue *keyboardFrameBegin = [keyboardInfo valueForKey:UIKeyboardFrameEndUserInfoKey];
     rectKeyboardFrame = [keyboardFrameBegin CGRectValue];
     CGFloat screenScale = [[UIScreen mainScreen] scale];
     CGFloat height = screenScale * rectKeyboardFrame.size.height;
-    NSMutableDictionary *msg = [[NSMutableDictionary alloc] init];
-    [msg setValue:KEYBOARD_ACTION forKey:@"msg"];
-    [msg setValue:[NSNumber numberWithBool:YES] forKey:@"show"];
-    [msg setValue:[NSNumber numberWithFloat:height] forKey:@"height"];
-    [self sendData:msg];
+ 
+    //解决了键盘输入法切换高度不变化的bug
+    if (preHeight!=height) {
+        preHeight=height;
+        NSMutableDictionary *msg = [[NSMutableDictionary alloc] init];
+        [msg setValue:KEYBOARD_ACTION forKey:@"msg"];
+        [msg setValue:[NSNumber numberWithBool:YES] forKey:@"show"];
+        [msg setValue:[NSNumber numberWithFloat:height] forKey:@"height"];
+        //NSLog(@"%@",msg);
+        [self sendData:msg];
+    }
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification {
