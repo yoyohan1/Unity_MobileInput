@@ -27,6 +27,12 @@ namespace Mopsicus.Plugins {
         /// </summary>
         protected virtual void Start () {
             _id = MobileInput.Register (this);
+#if UNITY_EDITOR
+            yoyohan.GameTools.AddTriggersListener(gameObject, UnityEngine.EventSystems.EventTriggerType.PointerClick, new UnityEngine.Events.UnityAction<UnityEngine.EventSystems.BaseEventData>(v => {
+                MobileInput.OnFocus(this._id);
+                MobileInput.OnShowKeyboard(true, 350);
+            }));
+#endif
         }
 
         /// <summary>
@@ -66,6 +72,8 @@ namespace Mopsicus.Plugins {
         /// </summary>
         const string KEYBOARD_ACTION = "KEYBOARD_ACTION";
 
+        const string ON_FOCUS = "ON_FOCUS";
+
         /// <summary>
         /// Key name for settings save
         /// </summary>
@@ -81,6 +89,8 @@ namespace Mopsicus.Plugins {
         /// </summary>
         public static ShowDelegate OnShowKeyboard = delegate { };
 
+        public static Action<int> OnFocus;
+
         /// <summary>
         /// Mobile fields dictionary
         /// </summary>
@@ -89,7 +99,7 @@ namespace Mopsicus.Plugins {
         /// <summary>
         /// Current instance
         /// </summary>
-        private static MobileInput _instance;
+        public static MobileInput _instance;
 
         /// <summary>
         /// Cache data for hidden app state
@@ -176,6 +186,8 @@ namespace Mopsicus.Plugins {
                         break;
                     default:
                         int id = response["id"];
+                        if (code==ON_FOCUS && OnFocus != null)
+                            OnFocus(id);
                         if (_inputs.ContainsKey (id)) {
                             GetReceiver (id).Send (response);
                         }
@@ -340,6 +352,15 @@ namespace Mopsicus.Plugins {
             }
         }
 
+        //public MobileInputField getFocusInputField() {
+        //    foreach (var item in _instance._inputs.Values){
+        //        MobileInputField mobileInputField = (MobileInputField)item;
+        //        if (mobileInputField.isFocused || mobileInputField.InputField.isFocused){
+        //            return mobileInputField;
+        //        }
+        //    }
+        //    return null;
+        //}
     }
 
 }

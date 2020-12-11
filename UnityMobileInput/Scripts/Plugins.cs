@@ -35,6 +35,8 @@ namespace Mopsicus.Plugins {
     /// </summary>
 	public class Plugins : MonoBehaviour {
 
+        public static Plugins instance;
+
 #if UNITY_ANDROID
         /// <summary>
         /// Mask for Java classes
@@ -66,7 +68,12 @@ namespace Mopsicus.Plugins {
         private Dictionary<string, IPlugin> _plugins;
 
 		private void Awake () {
-			name = _dataObject;
+            if (instance != null){
+                DestroyImmediate(gameObject);
+                return;
+            }
+            instance = this;
+            name = _dataObject;
 			DontDestroyOnLoad (gameObject);
 			InitPlugins ();
 		}
@@ -91,7 +98,7 @@ namespace Mopsicus.Plugins {
             JsonObject data = new JsonObject ();
             data["object"] = _dataObject;
             data["receiver"] = _dataReceiver;
-#if UNITY_IOS
+#if UNITY_IOS && !UNITY_EDITOR
             pluginsInit (data.ToJsonString ());
 #endif
             Debug.Log ("Plugins init");

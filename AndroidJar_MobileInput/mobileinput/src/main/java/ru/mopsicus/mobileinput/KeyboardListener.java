@@ -22,6 +22,7 @@ import ru.mopsicus.common.Common;
 public class KeyboardListener implements KeyboardObserver {
 
     private boolean isPreviousState = false;
+    private int preKeyboardHeight = 0;
     private Common common = new Common();
 
     private static int keyboardHeightcons = -1;
@@ -29,7 +30,7 @@ public class KeyboardListener implements KeyboardObserver {
     @Override
     public void onKeyboardHeight(float height, int keyboardHeight, int orientation) {
         boolean isShow = (keyboardHeight > 0);
-        Log.i("Unity", "keyheight----------------------:" + keyboardHeight);
+        Log.i("Unity", "Java端onKeyboardHeight得到相应:" + keyboardHeight);
         JSONObject json = new JSONObject();
         try {
             json.put("msg", Plugin.KEYBOARD_ACTION);
@@ -37,33 +38,36 @@ public class KeyboardListener implements KeyboardObserver {
             json.put("height", height);
         } catch (JSONException e) {
         }
-        if (isPreviousState != isShow) {
+
+        //增加preKeyboardHeight判断，输入法切换时键盘高度变化 也需要发给Unity
+        if (isPreviousState != isShow || preKeyboardHeight != keyboardHeight) {
             isPreviousState = isShow;
+            preKeyboardHeight = keyboardHeight;
             common.sendData(Plugin.name, json.toString());
         }
 
-        if (isShow) {
-            //UnityPlayer.currentActivity.findViewById(android.R.id.content).setTranslationY(-200);
-            keyboardHeightcons = keyboardHeight;
-            if (edit != null) {
-                View view = UnityPlayer.currentActivity.findViewById(android.R.id.content);
-                view.setTranslationY(-(edit.getY() + edit.getHeight() - (view.getHeight() - keyboardHeight)));
-            }
-        } else {
-            UnityPlayer.currentActivity.findViewById(android.R.id.content).setTranslationY(0);
-        }
+//        if (isShow) {
+//            //UnityPlayer.currentActivity.findViewById(android.R.id.content).setTranslationY(-200);
+//            keyboardHeightcons = keyboardHeight;
+//            if (edit != null) {
+//                View view = UnityPlayer.currentActivity.findViewById(android.R.id.content);
+//                view.setTranslationY(-(edit.getY() + edit.getHeight() - (view.getHeight() - keyboardHeight)));
+//            }
+//        } else {
+//            UnityPlayer.currentActivity.findViewById(android.R.id.content).setTranslationY(0);
+//        }
     }
 
-    private static EditText edit;
-
-    public static void setFoucsEdit(EditText exit1) {
-        edit = exit1;
-
-        if (edit != null && keyboardHeightcons != -1) {
-            View view = UnityPlayer.currentActivity.findViewById(android.R.id.content);
-            view.setTranslationY(-(edit.getY() + edit.getHeight() - (view.getHeight() - keyboardHeightcons)));
-        }
-    }
+//    private static EditText edit;
+//
+//    public static void setFoucsEdit(EditText exit1) {
+//        edit = exit1;
+//
+//        if (edit != null && keyboardHeightcons != -1) {
+//            View view = UnityPlayer.currentActivity.findViewById(android.R.id.content);
+//            view.setTranslationY(-(edit.getY() + edit.getHeight() - (view.getHeight() - keyboardHeightcons)));
+//        }
+//    }
 
 }
 

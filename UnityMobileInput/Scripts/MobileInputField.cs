@@ -185,6 +185,10 @@ namespace Mopsicus.Plugins {
         /// Constructor
         /// </summary>
         private void Awake () {
+            if (Plugins.instance == null){
+                GameObject plugins = new GameObject("Plugins");
+                plugins.AddComponent<Plugins>();
+            }
             _inputObject = this.GetComponent<InputField> ();
             if ((object) _inputObject == null) {
                 Debug.LogError (string.Format ("No found InputField for {0} MobileInput", this.name));
@@ -235,7 +239,7 @@ namespace Mopsicus.Plugins {
             if (!_isMobileInputCreated || !this.Visible) {
                 return;
             }
-            this.SetVisible (hasFocus);
+            //this.SetVisible (hasFocus);
         }
 
         /// <summary>
@@ -269,6 +273,8 @@ namespace Mopsicus.Plugins {
         }
 
         public string text { get { return Text; } set { Text = value; } }
+
+        public bool isFocused = false;
 
         /// <summary>
         /// Initialization coroutine
@@ -414,7 +420,6 @@ namespace Mopsicus.Plugins {
         /// </summary>
         /// <param name="data">JSON</param>
         private IEnumerator PluginsMessageRoutine (JsonObject data) {
-            yield return null;
             string msg = data["msg"];
             if (msg.Equals (TEXT_CHANGE)) {
                 string text = data["text"];
@@ -422,8 +427,10 @@ namespace Mopsicus.Plugins {
             } else if (msg.Equals (READY)) {
                 this.Ready ();
             } else if (msg.Equals (ON_FOCUS)) {
+                isFocused = true;
                 OnFocusChanged (true);
             } else if (msg.Equals (ON_UNFOCUS)) {
+                isFocused = false;
                 OnFocusChanged (false);
             } else if (msg.Equals (TEXT_END_EDIT)) {
                 string text = data["text"];
@@ -434,6 +441,7 @@ namespace Mopsicus.Plugins {
                     OnReturnPressedEvent.Invoke ();
                 }
             }
+            yield return null;
         }
 
 	/// <summary>
@@ -554,6 +562,7 @@ namespace Mopsicus.Plugins {
         /// </summary>
         /// <param name="isFocus">true | false</param>
         public void SetFocus (bool isFocus) {
+            isFocused = isFocus;
 #if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
             if (!_isMobileInputCreated) {
                 _isFocusOnCreate = isFocus;
@@ -574,7 +583,6 @@ namespace Mopsicus.Plugins {
                 _isFocusOnCreate = isFocus;
             }
 #endif
-
         }
 
         /// <summary>

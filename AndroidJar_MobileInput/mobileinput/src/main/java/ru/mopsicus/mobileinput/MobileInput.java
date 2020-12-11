@@ -287,7 +287,7 @@ public class MobileInput {
             edit.setGravity(gravity);
             edit.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) fontSize);
             edit.setTextColor(Color.argb(textColor_a, textColor_r, textColor_g, textColor_b));
-            edit.setBackgroundColor(Color.argb(0, backColor_r, backColor_g, backColor_b));
+            edit.setBackgroundColor(Color.argb(backColor_a, backColor_r, backColor_g, backColor_b));
             edit.setHintTextColor(Color.argb(placeHolderColor_a, placeHolderColor_r, placeHolderColor_g, placeHolderColor_b));
             if (!customFont.equals("default")) {
                 try {
@@ -498,14 +498,14 @@ public class MobileInput {
         View rootView = Plugin.activity.getWindow().getDecorView();
         if (isShow) {
             imm.showSoftInput(edit, InputMethodManager.SHOW_FORCED);
-            Log.i("Unity", " showKeyboard------------------------------------------" + edit.getY() + " " + edit.getHeight());
-            KeyboardListener.setFoucsEdit(edit);
+            //Log.i("Unity", " showKeyboard------------------------------------------" + edit.getY() + " " + edit.getHeight());
+            //KeyboardListener.setFoucsEdit(edit);
         } else {
             edit.clearFocus();
             rootView.clearFocus();
             imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
-            Log.i("Unity", " hideKeyboard------------------------------------------");
-            KeyboardListener.setFoucsEdit(null);
+            //Log.i("Unity", " hideKeyboard------------------------------------------");
+            //KeyboardListener.setFoucsEdit(null);
         }
 
     }

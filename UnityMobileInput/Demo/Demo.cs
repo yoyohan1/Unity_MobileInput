@@ -19,15 +19,20 @@ public class Demo : MonoBehaviour {
 	}
 
 	public void OnEndEdit (string text) {
-		Debug.LogFormat ("OnEdit action. Text: {0}", text);
+		Debug.LogFormat ("OnEndEdit action. Text: {0}", text);
 	}
 
 	public void SetTextData () {
+        Debug.Log("SetTextData");
 		InputText.Text = "Text by script";
 	}
 	
 	void OnShowKeyboard (bool isShow, int height) {
 		Debug.LogFormat ("Keyboad action, show = {0}, height = {1}", isShow, height);
 	}
+
+    public void TestUU() {
+        Debug.Log(GameObject.Find("GameObject").transform.localPosition);
+    }
 
 }

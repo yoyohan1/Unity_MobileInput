@@ -65,8 +65,8 @@ public class Plugin {
                 layout = new RelativeLayout(activity);
                 LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
-                layout.setBackgroundColor(Color.rgb(0, 0, 0));
-                layout.getBackground().setAlpha(1);
+//                layout.setBackgroundColor(Color.rgb(0, 0, 0));
+//                layout.getBackground().setAlpha(1);
 
                 group.addView(layout, params);
                 keyboardListener = new KeyboardListener();
