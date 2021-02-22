@@ -309,7 +309,7 @@ namespace Mopsicus.Plugins {
                             if (!IsManualHideControl) {
                                 Hide ();
                             }
-                            return;
+                            //return;//防止出现 按住不动 输入框不更新位置的bug
                         }
                     }
                 }

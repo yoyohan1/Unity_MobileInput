@@ -173,49 +173,6 @@ NSString *plugin;
 
 @implementation MobileInput
 
-+ (long long)getDiskFreeSize {
-    
-    unsigned long long diskSize = -1;
-    
-    if (@available(iOS 11.0, *)) {
-        NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:NSTemporaryDirectory()];
-        NSDictionary *results = [fileURL resourceValuesForKeys:@[NSURLVolumeAvailableCapacityForImportantUsageKey] error:nil];
-        NSLog(@"剩余可用空间:%@",results[NSURLVolumeAvailableCapacityForImportantUsageKey]);
-        //ios11 除以1000是正确的
-        diskSize=[results[NSURLVolumeAvailableCapacityForImportantUsageKey] unsignedLongLongValue]*1.0/(1000*1000);
-    } else {
-//        NSDictionary *fsAttr = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:nil];
-//         diskSize = [[fsAttr objectForKey:NSFileSystemFreeSize] longLongValue]/(1024*1024);
-        
-        /// 总大小
-        float totalsize = 0.0;
-        /// 剩余大小
-        float freesize = 0.0;
-        /// 是否登录
-        NSError *error = nil;
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error: &error];
-        if (dictionary)
-        {
-            NSNumber *_free = [dictionary objectForKey:NSFileSystemFreeSize];
-            freesize = [_free unsignedLongLongValue]*1.0/(1000);
-            
-            NSNumber *_total = [dictionary objectForKey:NSFileSystemSize];
-            totalsize = [_total unsignedLongLongValue]*1.0/(1000);
-            
-            NSLog(@"totalsize = %.2f, freesize = %f",totalsize/1000, freesize/1000);
-            diskSize=freesize*1.0/1000;
-        } else
-        {
-            NSLog(@"Error Obtaining System Memory Info: Domain = %@, Code = %ld", [error domain], (long)[error code]);
-        }
-        
-    }
-    
-    return diskSize;
-}
-
-
 + (void)init:(UIViewController *)viewController {
     mainViewController = viewController;
     mobileInputList = [[NSMutableDictionary alloc] init];
@@ -671,6 +628,7 @@ CGFloat preHeight;
     [msg setValue:[NSNumber numberWithBool:NO] forKey:@"show"];
     [msg setValue:[NSNumber numberWithFloat:0] forKey:@"height"];
     [self sendData:msg];
+    preHeight = 0;
 }
 
 @end
@@ -689,14 +647,5 @@ void inputDestroy() {
 void inputInit() {
     [MobileInput setPlugin:@"mobileinput"];
     [MobileInput init:UnityGetGLViewController()];
-}
-
-long getDiskFreeSize(){
-    return (long)[MobileInput getDiskFreeSize];
-}
-
-void openUrl(const char *url){
-    NSLog(@"使用原生openUrl:%@",[NSString stringWithUTF8String:url]);
-    [[UIApplication sharedApplication]openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url]]];
 }
 }
