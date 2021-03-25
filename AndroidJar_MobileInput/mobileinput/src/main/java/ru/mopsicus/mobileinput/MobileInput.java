@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.ScrollView;
@@ -55,9 +56,14 @@ public class MobileInput {
     private int characterLimit;
     private static SparseArray<MobileInput> mobileInputList = null;
 
+    private double screenWidth;
+    private double screenHeight;
+
     // Constructor
     private MobileInput(RelativeLayout parentLayout) {
         layout = parentLayout;
+        screenWidth = Plugin.activity.getResources().getDisplayMetrics().widthPixels;
+        screenHeight = Plugin.activity.getResources().getDisplayMetrics().heightPixels;
         edit = null;
     }
 
@@ -125,10 +131,16 @@ public class MobileInput {
         try {
             String placeHolder = data.getString("placeholder");
             double fontSize = data.getDouble("font_size");
-            double x = data.getDouble("x") * (double) layout.getWidth();
-            double y = data.getDouble("y") * (double) layout.getHeight();
-            double width = data.getDouble("width") * (double) layout.getWidth();
-            double height = data.getDouble("height") * (double) layout.getHeight();
+//            double x = data.getDouble("x") * (double) layout.getWidth();
+//            double y = data.getDouble("y") * (double) layout.getHeight();
+//            double width = data.getDouble("width") * (double) layout.getWidth();
+//            double height = data.getDouble("height") * (double) layout.getHeight();
+
+            double x = data.getDouble("x") * screenWidth;
+            double y = data.getDouble("y") * screenHeight;
+            double width = data.getDouble("width") * screenWidth;
+            double height = data.getDouble("height") * screenHeight;
+
             characterLimit = data.getInt("character_limit");
             int textColor_r = (int) (255.0f * data.getDouble("text_color_r"));
             int textColor_g = (int) (255.0f * data.getDouble("text_color_g"));
@@ -156,7 +168,7 @@ public class MobileInput {
             edit.setHint(placeHolder);
             Rect rect = new Rect((int) x, (int) y, (int) (x + width), (int) (y + height));
             LayoutParams params = new LayoutParams(rect.width(), rect.height());
-            params.setMargins(rect.left, rect.top, 0, 0);
+            params.setMargins(rect.left - Plugin.maskMarginLeft, rect.top - Plugin.maskMarginTop, 0, 0);
             edit.setLayoutParams(params);
             edit.setPadding(0, 0, 0, 0);
             int editInputType = 0;
@@ -434,13 +446,19 @@ public class MobileInput {
     // Set new position and size
     private void SetRect(JSONObject data) {
         try {
-            double x = data.getDouble("x") * (double) layout.getWidth();
-            double y = data.getDouble("y") * (double) layout.getHeight();
-            double width = data.getDouble("width") * (double) layout.getWidth();
-            double height = data.getDouble("height") * (double) layout.getHeight();
+//            double x = data.getDouble("x") * (double) layout.getWidth();
+//            double y = data.getDouble("y") * (double) layout.getHeight();
+//            double width = data.getDouble("width") * (double) layout.getWidth();
+//            double height = data.getDouble("height") * (double) layout.getHeight();
+
+            double x = data.getDouble("x") * screenWidth;
+            double y = data.getDouble("y") * screenHeight;
+            double width = data.getDouble("width") * screenWidth;
+            double height = data.getDouble("height") * screenHeight;
+
             Rect rect = new Rect((int) x, (int) y, (int) (x + width), (int) (y + height));
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(rect.width(), rect.height());
-            params.setMargins(rect.left, rect.top, 0, 0);
+            params.setMargins(rect.left - Plugin.maskMarginLeft, rect.top - Plugin.maskMarginTop, 0, 0);
             edit.setLayoutParams(params);
         } catch (JSONException e) {
         }
@@ -518,5 +536,10 @@ public class MobileInput {
         }
         Plugin.common.sendData(Plugin.name, data.toString());
     }
+
+//    private void setMaskEditMargin(Rect rect, EditText editText) {
+//
+//    }
+
 
 }

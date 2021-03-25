@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">UnityMobileInput</string>
+    <string name="title_activity_main">移动端输入框demo</string>
+    <string name="game_view_content_description">Game view</string>
 </resources>
