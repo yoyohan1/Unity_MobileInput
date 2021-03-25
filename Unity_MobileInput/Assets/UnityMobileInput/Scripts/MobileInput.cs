@@ -29,8 +29,10 @@ namespace Mopsicus.Plugins {
             _id = MobileInput.Register (this);
 #if UNITY_EDITOR
             yoyohan.GameTools.AddTriggersListener(gameObject, UnityEngine.EventSystems.EventTriggerType.PointerClick, new UnityEngine.Events.UnityAction<UnityEngine.EventSystems.BaseEventData>(v => {
-                MobileInput.OnFocus(this._id);
-                MobileInput.OnShowKeyboard(true, 350);
+                if (MobileInput.OnFocus!=null)
+                    MobileInput.OnFocus(this._id);
+                if (MobileInput.OnShowKeyboard != null)
+                    MobileInput.OnShowKeyboard(true, 350);
             }));
 #endif
         }
