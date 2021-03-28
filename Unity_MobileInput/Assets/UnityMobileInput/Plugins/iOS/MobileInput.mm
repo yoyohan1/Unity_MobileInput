@@ -28,7 +28,6 @@
 UIViewController *mainViewController = nil;
 NSMutableDictionary *mobileInputList = nil;
 NSString *plugin;
-
 //
 //
 //
@@ -171,6 +170,20 @@ NSString *plugin;
 
 @end
 
+
+@interface MaskView : UIView
+@end
+
+@implementation MaskView
+-(UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    UIView *view=[super hitTest:point withEvent:event];
+    return view==self?nil:view;
+}
+@end
+
+MaskView *maskView= nil;
+
+
 @implementation MobileInput
 
 + (void)init:(UIViewController *)viewController {
@@ -190,6 +203,34 @@ NSString *plugin;
         if (input) {
             [input processData:message];
         }
+    }
+}
+
++ (void)processMessageOhter:(NSString *)data {
+    NSLog(@"接收到Unity端processMessageOhter：%@",data);
+    NSDictionary *message = [Common jsonToDict:data];
+    NSString *msg = [message valueForKey:@"msg"];
+    if ([msg isEqualToString:@"SET_MASK"]) {
+        float x = [[message valueForKey:@"x"] floatValue] * mainViewController.view.bounds.size.width;
+        float y = [[message valueForKey:@"y"] floatValue] * mainViewController.view.bounds.size.height;
+        float width = [[message valueForKey:@"width"] floatValue] * mainViewController.view.bounds.size.width;
+        float height = [[message valueForKey:@"height"] floatValue] * mainViewController.view.bounds.size.height;
+        
+        if (maskView==nil) {
+            maskView = [[MaskView alloc] init];
+            [mainViewController.view addSubview:maskView];
+        }
+        maskView.frame = CGRectMake(x, y, width, height);
+        //maskView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.001f];
+        //maskView.userInteractionEnabled=false;
+        //maskView.alpha=0.001;
+        //maskView
+        
+        UIBezierPath *path=[UIBezierPath bezierPathWithRect:CGRectMake(0, 0, width, height)];
+        CAShapeLayer *maskViewLayer=[CAShapeLayer layer];
+        maskViewLayer.path=[path CGPath];
+        maskViewLayer.fillRule=kCAFillRuleNonZero;
+        maskView.layer.mask=maskViewLayer;
     }
 }
 
@@ -466,7 +507,8 @@ BOOL multiline;
         }
         editView = textField;
     }
-    [mainViewController.view addSubview:editView];
+    //[mainViewController.view addSubview:editView];
+    [maskView addSubview:editView];
     NSMutableDictionary *msg = [[NSMutableDictionary alloc] init];
     [msg setValue:READY forKey:@"msg"];
     [self sendData:msg];
@@ -647,6 +689,10 @@ void inputDestroy() {
 void inputInit() {
     [MobileInput setPlugin:@"mobileinput"];
     [MobileInput init:UnityGetGLViewController()];
+}
+
+void excuteOther_iOS(const char *data){
+    [MobileInput processMessageOhter:[NSString stringWithUTF8String:data]];
 }
 
 }
