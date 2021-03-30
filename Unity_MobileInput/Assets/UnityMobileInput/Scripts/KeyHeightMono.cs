@@ -80,9 +80,6 @@ namespace yoyohan
                 data["y"] = MobileInputField.InvariantCultureString(rect.y / Screen.height);
                 data["width"] = MobileInputField.InvariantCultureString(rect.width / Screen.width);
                 data["height"] = MobileInputField.InvariantCultureString(rect.height / Screen.height);
-                //data["screenWidth"] = MobileInputField.InvariantCultureString(Screen.width);
-                //data["screenHeight"] = MobileInputField.InvariantCultureString(Screen.height);
-                //data["canvasHeight"] = MobileInputField.InvariantCultureString(canvasHeight);
             }
             else
             {
@@ -91,6 +88,10 @@ namespace yoyohan
                 data["width"] = 1;
                 data["height"] = 1;
             }
+            data["screenWidth"] = MobileInputField.InvariantCultureString(Screen.width);
+            data["screenHeight"] = MobileInputField.InvariantCultureString(Screen.height);
+            //data["canvasHeight"] = MobileInputField.InvariantCultureString(canvasHeight);
+
 
             string json = data.ToJsonString();
 #if UNITY_EDITOR

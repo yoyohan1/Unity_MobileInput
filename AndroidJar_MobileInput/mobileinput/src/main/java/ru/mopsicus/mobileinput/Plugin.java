@@ -45,7 +45,7 @@ public class Plugin {
     private static KeyboardListener keyboardListener;
     public static int maskMarginLeft;
     public static int maskMarginTop;
-//    private static TextView textView;
+    //    private static TextView textView;
     public static double layoutWidth;
     public static double layoutHeight;//为什么使用layout宽高是因为跟Unity的Screent值相同，而不使用android代码activity.getResources().getDisplayMetrics()或者activity.getWindowManager().getDefaultDisplay().getSize获取的宽高 因为在有的机型值不一样 比如vivoX21A
 
@@ -187,19 +187,21 @@ public class Plugin {
         try {
             //layoutWidth = (double) layout.getWidth();
             //layoutHeight = (double) layout.getHeight();
-            Point screenSize = new Point();
-            activity.getWindowManager().getDefaultDisplay().getSize(screenSize);
+//            Point screenSize = new Point();
+//            activity.getWindowManager().getDefaultDisplay().getSize(screenSize);
 
             //double screenWidth = activity.getResources().getDisplayMetrics().widthPixels;
             //double screenHeight = activity.getResources().getDisplayMetrics().heightPixels;
-            final double screenWidth = screenSize.x;
-            final double screenHeight = screenSize.y;
+//            final double screenWidth = screenSize.x;
+//            final double screenHeight = screenSize.y;
 
-            Log.e("adbd", " x:" + data.getDouble("x") + " y:" + data.getDouble("y"));
+            //Log.e("adbd", " x:" + data.getDouble("x") + " y:" + data.getDouble("y"));
             //Log.e("adbd", "UnityscreenWidth:" + data.getDouble("ScreenWidth") + " UnityscreenHeight:" + data.getDouble("ScreenHeight"));
 
-//            final double unityScreenWidth = data.getDouble("screenWidth");
-//            final double unityScreenHeight = data.getDouble("screenHeight");
+            //由Unity端传入layoutwidth 因为Unity端会切换屏幕
+            layoutWidth = data.getDouble("screenWidth");
+            layoutHeight = data.getDouble("screenHeight");
+
 //            final double canvasHeight = data.getDouble("canvasHeight");
 
 //            double x = data.getDouble("x") * screenWidth;
