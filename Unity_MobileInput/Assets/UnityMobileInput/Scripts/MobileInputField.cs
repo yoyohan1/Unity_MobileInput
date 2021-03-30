@@ -350,8 +350,9 @@ namespace Mopsicus.Plugins {
 					yMax = screenCoord.y;
 				}
 			}
-			Rect result = new Rect (xMin, Screen.height - yMax, xMax - xMin, yMax - yMin);
-			return result;
+            Rect result = new Rect (xMin, Screen.height - yMax, xMax - xMin, yMax - yMin);
+            //Rect result = new Rect(xMin, YouDaSdkMgr.instance.getAndroidScreenHeigth() - yMax, xMax - xMin, yMax - yMin);
+            return result;
 		}        
 
         /// <summary>
@@ -555,6 +556,7 @@ namespace Mopsicus.Plugins {
             data["y"] = InvariantCultureString(rect.y / Screen.height);
             data["width"] = InvariantCultureString(rect.width / Screen.width);
             data["height"] = InvariantCultureString(rect.height / Screen.height);
+
             this.Execute (data);
         }
 

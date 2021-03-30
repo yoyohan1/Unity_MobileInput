@@ -8,6 +8,7 @@ package ru.mopsicus.mobileinput;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Build;
 import android.transition.Visibility;
@@ -21,6 +22,7 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import ru.mopsicus.common.Common;
 
@@ -43,6 +45,24 @@ public class Plugin {
     private static KeyboardListener keyboardListener;
     public static int maskMarginLeft;
     public static int maskMarginTop;
+//    private static TextView textView;
+    public static double layoutWidth;
+    public static double layoutHeight;//为什么使用layout宽高是因为跟Unity的Screent值相同，而不使用android代码activity.getResources().getDisplayMetrics()或者activity.getWindowManager().getDefaultDisplay().getSize获取的宽高 因为在有的机型值不一样 比如vivoX21A
+
+    public static double getLayoutWidth() {
+        if (layoutWidth == 0) {
+            layoutWidth = layout.getWidth();
+        }
+        return layoutWidth;
+    }
+
+    public static double getLayoutHeight() {
+        if (layoutHeight == 0) {
+            layoutHeight = layout.getHeight();
+        }
+        return layoutHeight;
+    }
+
 
     // Get view recursive
     private static View getLeafView(View view) {
@@ -92,8 +112,8 @@ public class Plugin {
                 //layout.setLayoutParams(new RelativeLayout.LayoutParams(activity.getResources().getDisplayMetrics().widthPixels,activity.getResources().getDisplayMetrics().heightPixels));
                 //scrollView.addView(layout, params);
 
-//                Button button = new Button(activity.getApplicationContext());
-//                button.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                //Button button = new Button(activity.getApplicationContext());
+                //button.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 //                button.setText("获取edit的信息");
 //                button.setOnClickListener(new View.OnClickListener() {
 //                    @Override
@@ -104,17 +124,23 @@ public class Plugin {
 //                    }
 //                });
 
-                //layout.addView(button);
+//                textView = new TextView(activity.getApplicationContext());
+//                textView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//                textView.setText("hello world");
+//                textView.setTextColor(Color.BLUE);
+//                layout.addView(textView);
                 //layout.setBackgroundColor(Color.TRANSPARENT);
 
                 //layout.addView(View.inflate(activity,R.layout.hitokotodemo,null));
                 //group.addView(scrollView);
-
                 group.addView(layout, params);
                 keyboardListener = new KeyboardListener();
                 keyboardProvider = new KeyboardProvider(activity, layout, keyboardListener);
-
                 Log.i("Unity", "移动输入框插件的layout创建成功！");
+
+//              layoutWidth = (double) layout.getWidth();//layoutWidth layoutHeight不能放在这里获取 因为获取到的是0
+//              layoutHeight = (double) layout.getHeight();//layoutWidth layoutHeight不能放在这里获取 因为获取到的是0
+
             }
         });
     }
@@ -159,14 +185,33 @@ public class Plugin {
 
     private static void setMaskRect(JSONObject data) {
         try {
+            //layoutWidth = (double) layout.getWidth();
+            //layoutHeight = (double) layout.getHeight();
+            Point screenSize = new Point();
+            activity.getWindowManager().getDefaultDisplay().getSize(screenSize);
 
-            double screenWidth = activity.getResources().getDisplayMetrics().widthPixels;
-            double screenHeight = activity.getResources().getDisplayMetrics().heightPixels;
+            //double screenWidth = activity.getResources().getDisplayMetrics().widthPixels;
+            //double screenHeight = activity.getResources().getDisplayMetrics().heightPixels;
+            final double screenWidth = screenSize.x;
+            final double screenHeight = screenSize.y;
 
-            double x = data.getDouble("x") * screenWidth;
-            double y = data.getDouble("y") * screenHeight;
-            double width = data.getDouble("width") * screenWidth;
-            double height = data.getDouble("height") * screenHeight;
+            Log.e("adbd", " x:" + data.getDouble("x") + " y:" + data.getDouble("y"));
+            //Log.e("adbd", "UnityscreenWidth:" + data.getDouble("ScreenWidth") + " UnityscreenHeight:" + data.getDouble("ScreenHeight"));
+
+//            final double unityScreenWidth = data.getDouble("screenWidth");
+//            final double unityScreenHeight = data.getDouble("screenHeight");
+//            final double canvasHeight = data.getDouble("canvasHeight");
+
+//            double x = data.getDouble("x") * screenWidth;
+//            double y = data.getDouble("y") * screenHeight;
+//            double width = data.getDouble("width") * screenWidth;
+//            double height = data.getDouble("height") * screenHeight;
+            double x = data.getDouble("x") * getLayoutWidth();
+            double y = data.getDouble("y") * getLayoutHeight();
+            double width = data.getDouble("width") * getLayoutWidth();
+            double height = data.getDouble("height") * getLayoutHeight();
+
+
             Rect rect = new Rect((int) x, (int) y, (int) (x + width), (int) (y + height));
             final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(rect.width(), rect.height());
             params.setMargins(rect.left, rect.top, 0, 0);
@@ -177,6 +222,7 @@ public class Plugin {
 //            final RelativeLayout relativeLayout = new RelativeLayout(Plugin.activity);
 //            relativeLayout.setLayoutParams(params);
 //            relativeLayout.setBackgroundColor(Color.WHITE);
+//            relativeLayout.getBackground().setAlpha(100);
 //            activity.runOnUiThread(new Runnable() {
 //                public void run() {
 //                    activity.addContentView(relativeLayout, params);
@@ -186,8 +232,15 @@ public class Plugin {
 
             activity.runOnUiThread(new Runnable() {
                 public void run() {
+                    //"UW:" + unityScreenWidth + " UH:" + unityScreenHeight + " CH" + canvasHeight +
+//                    textView.setText(" W:" + screenWidth + " H:" + screenHeight + " LW:" + getLayoutWidth() + " LH:" + getLayoutHeight());
+//                    textView.setTextSize(30);
+
+//                    activity.addContentView(relativeLayout, params);
+
                     layout.setLayoutParams(params);
-                    //layout.setBackgroundColor(Color.BLACK);
+                    //layout.setBackgroundColor(Color.RED);
+                    //layout.getBackground().setAlpha(100);
                 }
             });
 

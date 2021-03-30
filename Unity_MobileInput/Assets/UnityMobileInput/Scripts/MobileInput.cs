@@ -181,6 +181,7 @@ namespace Mopsicus.Plugins {
                         int height = 0;
 #if UNITY_ANDROID
                         height = (int) (response["height"] * (float) Screen.height);
+                        //height = (int)(response["height"] * (float)yoyohan.YouDaSdkTool.YouDaSdkMgr.instance.getAndroidScreenHeigth());
 #elif UNITY_IOS
                         height = response["height"];
 #endif

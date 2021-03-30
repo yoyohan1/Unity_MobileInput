@@ -7,6 +7,7 @@
 package ru.mopsicus.mobileinput;
 
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.text.Editable;
@@ -62,8 +63,17 @@ public class MobileInput {
     // Constructor
     private MobileInput(RelativeLayout parentLayout) {
         layout = parentLayout;
-        screenWidth = Plugin.activity.getResources().getDisplayMetrics().widthPixels;
-        screenHeight = Plugin.activity.getResources().getDisplayMetrics().heightPixels;
+        //screenWidth = Plugin.activity.getResources().getDisplayMetrics().widthPixels;
+        //screenHeight = Plugin.activity.getResources().getDisplayMetrics().heightPixels;
+
+//        Point screenSize = new Point();
+//        Plugin.activity.getWindowManager().getDefaultDisplay().getSize(screenSize);
+//        screenWidth = screenSize.x;
+//        screenHeight = screenSize.y;
+
+        screenWidth = Plugin.getLayoutWidth();
+        screenHeight = Plugin.getLayoutHeight();
+
         edit = null;
     }
 
@@ -140,6 +150,11 @@ public class MobileInput {
             double y = data.getDouble("y") * screenHeight;
             double width = data.getDouble("width") * screenWidth;
             double height = data.getDouble("height") * screenHeight;
+//            Log.i("Unity", " x:" + x + " y:" + y + " width:" + width + " height:" + height);
+//            2021-03-30 14:30:33.823 15761-15761/com.yoyohan.mobileinput I/Unity:  x:147.5064 y:818.241612 width:295.293654 height:62.6400132
+//            2021-03-30 14:30:33.824 15761-15761/com.yoyohan.mobileinput I/Unity:  x:147.5064 y:646.363128 width:295.293654 height:62.6400132
+//            2021-03-30 14:30:33.825 15761-15761/com.yoyohan.mobileinput I/Unity:  x:147.5064 y:731.251176 width:161.136 height:62.6400132
+
 
             characterLimit = data.getInt("character_limit");
             int textColor_r = (int) (255.0f * data.getDouble("text_color_r"));
@@ -455,6 +470,8 @@ public class MobileInput {
             double y = data.getDouble("y") * screenHeight;
             double width = data.getDouble("width") * screenWidth;
             double height = data.getDouble("height") * screenHeight;
+
+//            Log.i("Unity", " x:" + x + " y:" + y + " width:" + width + " height:" + height);
 
             Rect rect = new Rect((int) x, (int) y, (int) (x + width), (int) (y + height));
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(rect.width(), rect.height());

@@ -21,7 +21,7 @@ namespace yoyohan
     /// </summary>
     public class KeyHeightMono : MonoBehaviour
     {
-
+        
         public RectTransform main;
         public RectTransform maskRect;
 
@@ -76,12 +76,13 @@ namespace yoyohan
                 //Debug.Log(rect.y);
                 //Debug.Log(rect.width);
                 //Debug.Log(rect.height);
-                //Debug.Log(Screen.width);
-                //Debug.Log(Screen.height);
                 data["x"] = MobileInputField.InvariantCultureString(rect.x / Screen.width);
                 data["y"] = MobileInputField.InvariantCultureString(rect.y / Screen.height);
                 data["width"] = MobileInputField.InvariantCultureString(rect.width / Screen.width);
                 data["height"] = MobileInputField.InvariantCultureString(rect.height / Screen.height);
+                //data["screenWidth"] = MobileInputField.InvariantCultureString(Screen.width);
+                //data["screenHeight"] = MobileInputField.InvariantCultureString(Screen.height);
+                //data["canvasHeight"] = MobileInputField.InvariantCultureString(canvasHeight);
             }
             else
             {
