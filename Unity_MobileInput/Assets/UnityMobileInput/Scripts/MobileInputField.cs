@@ -204,6 +204,16 @@ namespace Mopsicus.Plugins {
         protected override void Start () {
             base.Start ();
             StartCoroutine (InitialzieOnNextFrame ());
+#if UNITY_EDITOR
+            InvokeRepeating("InvokeJudgeLayer", 0, 0.1f);
+#endif
+        }
+
+        void InvokeJudgeLayer() {
+            GameObject go = yoyohan.GameTools.GetClickUIBtnObject(GetScreenRectFromRectTransform2(_inputObjectText.rectTransform).center);
+            if (gameObject.activeInHierarchy && go != null && go.transform.parent != transform){
+                Debug.LogError("mobileInputField 被遮挡！请注意手机端原生输入框的层级问题！",gameObject);
+            }
         }
 
         /// <summary>
@@ -353,7 +363,48 @@ namespace Mopsicus.Plugins {
             Rect result = new Rect (xMin, Screen.height - yMax, xMax - xMin, yMax - yMin);
             //Rect result = new Rect(xMin, YouDaSdkMgr.instance.getAndroidScreenHeigth() - yMax, xMax - xMin, yMax - yMin);
             return result;
-		}        
+		}
+
+        //返回Unity实际用的rect
+        public static Rect GetScreenRectFromRectTransform2(RectTransform rect)
+        {
+            Vector3[] corners = new Vector3[4];
+            rect.GetWorldCorners(corners);
+            float xMin = float.PositiveInfinity;
+            float xMax = float.NegativeInfinity;
+            float yMin = float.PositiveInfinity;
+            float yMax = float.NegativeInfinity;
+            for (int i = 0; i < 4; i++)
+            {
+                Vector3 screenCoord;
+                if (rect.GetComponentInParent<Canvas>().renderMode == RenderMode.ScreenSpaceOverlay)
+                {
+                    screenCoord = corners[i];
+                }
+                else
+                {
+                    screenCoord = RectTransformUtility.WorldToScreenPoint(Camera.main, corners[i]);
+                }
+                if (screenCoord.x < xMin)
+                {
+                    xMin = screenCoord.x;
+                }
+                if (screenCoord.x > xMax)
+                {
+                    xMax = screenCoord.x;
+                }
+                if (screenCoord.y < yMin)
+                {
+                    yMin = screenCoord.y;
+                }
+                if (screenCoord.y > yMax)
+                {
+                    yMax = screenCoord.y;
+                }
+            }
+            Rect result = new Rect(xMin, yMin, xMax - xMin, yMax - yMin);
+            return result;
+        }
 
         /// <summary>
         /// Prepare config
